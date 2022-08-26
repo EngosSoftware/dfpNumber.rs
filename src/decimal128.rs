@@ -3,6 +3,7 @@
 use dfp_number_sys::*;
 use std::cmp::Ordering;
 use std::convert::Infallible;
+use std::fmt;
 use std::str::FromStr;
 
 #[macro_export]
@@ -23,18 +24,59 @@ impl Default for Decimal128 {
   }
 }
 
-impl std::fmt::Debug for Decimal128 {
+impl fmt::Debug for Decimal128 {
   /// Converts [Decimal128] into string in debug mode.
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     let mut flags = FB_CLEAR;
     write!(f, "{}", bid128_to_string(self.0, &mut flags))
   }
 }
 
-impl std::fmt::Display for Decimal128 {
+impl fmt::Display for Decimal128 {
   /// Converts [Decimal128] into string.
-  fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-    write!(f, "{:?}", self)
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    // let c = f.fill();
+    // println!("    width = {:?}", f.width());
+    // println!("precision = {:?}", f.precision());
+    // println!("    align = {:?}", f.align());
+    // println!("     fill = {}", c);
+    // println!("alternate = {:?}", f.alternate());
+    // println!();
+
+    let mut flags = FB_CLEAR;
+    let s = bid128_to_string(self.0, &mut flags);
+    let mut split = s.split('E');
+    if let Some((p1, p2)) = split.next().zip(split.next()) {
+      if let Ok(offset) = p2.parse::<isize>() {
+        let sign = if p1.starts_with('-') { "-" } else { "" };
+        return if offset < 0 {
+          let dp = offset.unsigned_abs();
+          let len = p1.len();
+          if dp + 1 < len {
+            write!(
+              f,
+              "{}{}.{}",
+              sign,
+              &p1[1..len - dp],
+              p1[len - dp..].trim_end_matches('0')
+            )
+          } else {
+            let mut zeros = String::new();
+            for _ in 0..dp - (len - 1) {
+              zeros.push('0');
+            }
+            write!(f, "{}0.{}{}", sign, zeros, p1[1..].trim_end_matches('0'))
+          }
+        } else {
+          let mut zeros = String::new();
+          for _ in 0..offset {
+            zeros.push('0');
+          }
+          write!(f, "{}{}{}", sign, &p1[1..], zeros)
+        };
+      }
+    }
+    write!(f, "{}", s)
   }
 }
 
