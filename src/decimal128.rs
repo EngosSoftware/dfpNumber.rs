@@ -41,7 +41,7 @@ impl std::fmt::Display for Decimal128 {
 impl Decimal128 {
   ///
   pub fn new(n: i64, s: i32) -> Self {
-    Self(bid128_scalbn(bid128_from_int64(n), s))
+    Self(bid128_scalbn(bid128_from_int64(n), -s))
   }
   ///
   pub fn zero() -> Self {
