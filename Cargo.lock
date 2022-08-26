@@ -17,9 +17,7 @@ dependencies = [
 
 [[package]]
 name = "dfp-number-sys"
-version = "0.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "42873a608d6d46f30f16f40bbca9a5db02f71d60a927c3b0d7c52a6af37c7567"
+version = "0.0.2"
 dependencies = [
  "cc",
  "libc",

@@ -9,4 +9,4 @@ license = "MIT"
 edition = "2021"
 
 [dependencies]
-dfp-number-sys = "0.0.1"
+dfp-number-sys = { path = "../dfpNumber.sys" }
