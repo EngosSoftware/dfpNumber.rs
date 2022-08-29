@@ -37,7 +37,7 @@ impl fmt::Display for Decimal128 {
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     let mut flags = FB_CLEAR;
     let s = bid128_to_string(self.0, &mut flags);
-    let negative = if s.starts_with('-') { true } else { false };
+    let negative = s.starts_with('-');
     let mut split = s[1..].split('E');
     if let Some((sb, sa)) = split.next().zip(split.next()) {
       if let Ok(exponent) = sa.parse::<isize>() {
