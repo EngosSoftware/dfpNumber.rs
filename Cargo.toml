@@ -1,6 +1,6 @@
 [package]
 name = "dfp-number"
-version = "0.0.5"
+version = "0.0.6"
 authors = ["Dariusz Depta <dariusz.depta@engos.software>"]
 description = "Decimal floating point arithmetic for Rust based on bindings for Intel(R) Decimal Floating-Point Math Library v2.2"
 documentation = "https://docs.rs/dfp-number"

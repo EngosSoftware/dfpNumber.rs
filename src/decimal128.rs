@@ -33,50 +33,50 @@ impl fmt::Debug for Decimal128 {
 }
 
 impl fmt::Display for Decimal128 {
-  /// Converts [Decimal128] into string.
+  /// Converts [Decimal128] into human readable string.
   fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-    // let c = f.fill();
-    // println!("    width = {:?}", f.width());
-    // println!("precision = {:?}", f.precision());
-    // println!("    align = {:?}", f.align());
-    // println!("     fill = {}", c);
-    // println!("alternate = {:?}", f.alternate());
-    // println!();
-
     let mut flags = FB_CLEAR;
     let s = bid128_to_string(self.0, &mut flags);
-    let mut split = s.split('E');
-    if let Some((p1, p2)) = split.next().zip(split.next()) {
-      if let Ok(offset) = p2.parse::<isize>() {
-        let sign = if p1.starts_with('-') { "-" } else { "" };
-        return if offset < 0 {
-          let dp = offset.unsigned_abs();
-          let len = p1.len();
-          if dp + 1 < len {
-            write!(
-              f,
-              "{}{}.{}",
-              sign,
-              &p1[1..len - dp],
-              p1[len - dp..].trim_end_matches('0')
-            )
+    let negative = if s.starts_with('-') { true } else { false };
+    let mut split = s[1..].split('E');
+    if let Some((sb, sa)) = split.next().zip(split.next()) {
+      if let Ok(exponent) = sa.parse::<isize>() {
+        let decimal_points = exponent.unsigned_abs();
+        let (mut before, mut after) = if exponent < 0 {
+          let digit_count = sb.len();
+          if digit_count <= decimal_points {
+            let before = "0".to_string();
+            let mut after = "0".repeat(decimal_points - digit_count);
+            after.push_str(sb.trim_end_matches('0'));
+            (before, after)
           } else {
-            let mut zeros = String::new();
-            for _ in 0..dp - (len - 1) {
-              zeros.push('0');
-            }
-            write!(f, "{}0.{}{}", sign, zeros, p1[1..].trim_end_matches('0'))
+            let before = sb[..digit_count - decimal_points].to_string();
+            let after = sb[digit_count - decimal_points..]
+              .trim_end_matches('0')
+              .to_string();
+            (before, after)
           }
         } else {
-          let mut zeros = String::new();
-          for _ in 0..offset {
-            zeros.push('0');
-          }
-          write!(f, "{}{}{}", sign, &p1[1..], zeros)
+          let mut before = sb.to_string();
+          before.push_str(&"0".repeat(decimal_points));
+          let after = "".to_string();
+          (before, after)
         };
+        if let Some(precision) = f.precision() {
+          if after.len() < precision {
+            after.push_str(&"0".repeat(precision - after.len()));
+          } else {
+            after = after[0..precision].to_string();
+          }
+        }
+        if !after.is_empty() {
+          before.push('.');
+          before.push_str(&after);
+        }
+        return f.pad_integral(!negative, "", &before);
       }
     }
-    write!(f, "{}", s)
+    f.pad(&s)
   }
 }
 
