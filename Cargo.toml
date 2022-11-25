@@ -1,12 +1,12 @@
 [package]
 name = "dfp-number"
-version = "0.0.6"
-authors = ["Dariusz Depta <dariusz.depta@engos.software>"]
+version = "0.0.7"
+authors = ["senees <code@senees.de>"]
 description = "Decimal floating point arithmetic for Rust based on bindings for Intel(R) Decimal Floating-Point Math Library v2.2"
 documentation = "https://docs.rs/dfp-number"
-repository = "https://github.com/EngosSoftware/dfpNumber.rs.git"
+repository = "https://github.com/senees/dfpNumber.rs.git"
 license = "MIT"
 edition = "2021"
 
 [dependencies]
-dfp-number-sys = "0.0.3"
+dfp-number-sys = "0.0.10"

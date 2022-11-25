@@ -10,16 +10,16 @@ checksum = "2fff2a6927b3bb87f9595d67196a70493f627687a71d87a0d692242c33f58c11"
 
 [[package]]
 name = "dfp-number"
-version = "0.0.6"
+version = "0.0.7"
 dependencies = [
  "dfp-number-sys",
 ]
 
 [[package]]
 name = "dfp-number-sys"
-version = "0.0.3"
+version = "0.0.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "43c848b16122f2cee08cb47e53e7f0a2a7676fec5ad2b06ffdf87352c80727dd"
+checksum = "b7d1ab8ff01c1567be6eef96a63b1d4b8cdf2afd8da216cfd64bf821423c1b09"
 dependencies = [
  "cc",
  "libc",
@@ -27,6 +27,6 @@ dependencies = [
 
 [[package]]
 name = "libc"
-version = "0.2.132"
+version = "0.2.137"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8371e4e5341c3a96db127eb2465ac681ced4c433e01dd0e938adbef26ba93ba5"
+checksum = "fc7fcc620a3bff7cdd7a365be3376c97191aeaccc2a603e600951e452615bf89"
